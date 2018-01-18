@@ -1,12 +1,24 @@
 language: go
 
 env:
-    - GIMME_OS=linux GIMME_ARCH=amd64
-    - GIMME_OS=darwin GIMME_ARCH=amd64
-    - GIMME_OS=windows GIMME_ARCH=amd64
+    - GIMME_OS=linux GIMME_ARCH=amd64 FILENAME='daily_bing_wallpaper_lin.bin'
+    - GIMME_OS=darwin GIMME_ARCH=amd64 FILENAME='daily_bing_wallpaper_mac.bin'
+    - GIMME_OS=windows GIMME_ARCH=amd64 FILENAME='daily_bing_wallpaper_win.exe'
 
 install:
     - go get -d -v ./...
 
 script:
-    - go build -v ./...
+    - go build -v -o $FILENAME ./...
+
+deploy:
+    provider:     releases
+    file:         $FILENAME
+    skip_cleanup: true
+    overwrite:    true
+
+    api_key:
+        secure: "YI0ya6NP47FuIAGCMc8wMdfkri3XMDwkANLDsCtESOb34i3rQL9X4GhNN8vPSJ4OSR+tZKbp2HQNwOD4c4KHL4XQa1dYOhy9rAiJ+OrAy2hutzbBhSjwWy44dvu8hZhlT3vVHpcgah6nkmMOB78l8UpfFppi0zua6RvRYc7lwvOL8DwzmgZ4AFKeOEy9aZLVDGskHYsf+X9kU3wXr+5iH3rsESM7kvZKoCcjAcg8YJn79zw0JNZxW9gHO/o0NS60DyXorPBX/5AZCGsMHv4Fpq6fGq9zHXSV4VieSNXYei4RqvWQN1/CVoODxPVOftn0AYnUS4Y5FXI/9MBROPVgpaycnF35tTbg3bNj2yL3BFnUP+QsZ/lO+oUewwD3ugcN5EKmB7KcSPLarK8iyRTTHUspLusoyfEzoWlVjjjn9+lZR9SLW2RFlGpNX7WgfgGBCl7xdXhwxG1K53VIekJSAbm/sS87BAvjdsxYimq7UxwaEUnbkRWiztC+S0RiA0ENWFaUXH56l6milPjhHxguRc5+6k8HdE0KPfoFCdkCT8+JX9LuZpCRS4xuM7RdrvhbykQbaGk6DkvuSVVKh8UNbIzJFEoo2XN0OMaCmvmw6pAmcuORTpbz1ouOIcDYM488uniCvnElGuwKslEqzYKguWvPbeUIvUsAdWAM3/0MXtY="
+
+    on:
+        tags:     true
